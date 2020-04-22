@@ -1,5 +1,6 @@
 package com.movierank.service;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,8 @@ public class MovieService {
 		Elements daumList = daumDoc.select(".tit_join a");
 		
 		// DB에 있는 기존 영화정보데이터를 삭제!
+		// 매일 기존의 데이터를 삭제하고 새로운 데이터를 입력
+		// 좋은 코드는 아님 
 		mongoDao.dropCol();
 		
 		
@@ -79,7 +82,16 @@ public class MovieService {
 			}
 			
 			
-			MovieDTO mDto = new MovieDTO(rank, movie, imgsrc, type, opendate, bookingrate, runtime, director, actor, navercode, naverscore, daumcode, daumscore);
+		//	MovieDTO mDto = new MovieDTO(rank, movie, imgsrc, type, opendate, bookingrate, runtime, director, actor, navercode, naverscore, daumcode, daumescore, score);
+			
+		//	MovieDTO mDto = new MovieDTO(rank, movie, imgsrc, type, opendate, bookingrate, runtime, director, actor, navercode, naverscore, daumcode, daumscore);
+			
+			
+			DecimalFormat fmt = new DecimalFormat("#.#");
+			String fmtVal = fmt.format((daumscore + naverscore)/2);
+			Double score = Double.parseDouble(fmtVal);
+			
+			MovieDTO mDto  = new MovieDTO(rank, movie, imgsrc, type, opendate, bookingrate, runtime, director, actor, navercode, naverscore, daumcode, daumscore, score);
 			
 			log.info("<><><><><><>MOVIE: "+ mDto.toString());
 			rankList.add(mDto);
